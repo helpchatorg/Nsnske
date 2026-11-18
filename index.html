@@ -2098,25 +2098,30 @@
         /* Student notification list re-uses .notif-card style already in this file */
         .gb-notif-card{border:1.5px solid #c7d2fe;background:#eef2ff;}
         .gb-notif-open-btn{margin-top:8px;background:var(--primary,#2563eb);color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:0.72rem;font-weight:800;cursor:pointer;}
-    </style>
-<style>
-/* ===== Aadhar autofill / upload widget ===== */
+    </style><style>
+/* ===== Aadhar autofill / upload widget (front + back) ===== */
 .aad-box { background:linear-gradient(135deg,#eff6ff,#f5f3ff); border:1.5px dashed #818cf8; border-radius:14px; padding:12px; margin-bottom:16px; text-align:center; }
-.aad-main-btn { width:100% !important; margin:0 !important; background:#4f46e5 !important; color:#fff !important; padding:13px 10px !important; border-radius:12px !important; font-size:0.92rem !important; }
-.aad-hint { font-size:0.74rem; color:#475569; font-weight:700; margin-top:7px; }
-.aad-status { margin-top:10px; font-size:0.74rem; font-weight:700; line-height:1.5; text-align:left; border-radius:10px; padding:9px 11px; }
+.aad-slots { display:flex; gap:10px; flex-wrap:wrap; }
+.aad-slot { flex:1 1 150px; min-width:0; }
+.aad-main-btn { width:100% !important; margin:0 !important; background:#4f46e5 !important; color:#fff !important; padding:11px 8px !important; border-radius:12px !important; font-size:0.8rem !important; line-height:1.35; }
+.aad-main-btn span { display:block; font-size:0.72rem; font-weight:700; opacity:.9; margin-top:2px; }
+.aad-hint { font-size:0.74rem; color:#475569; font-weight:700; margin-top:8px; }
+.aad-sub { font-size:0.66rem; color:#64748b; font-weight:600; margin-top:2px; }
+.aad-status { margin-top:10px; font-size:0.74rem; font-weight:700; line-height:1.55; text-align:left; border-radius:10px; padding:9px 11px; }
 .aad-status.info { background:#eff6ff; color:#1e40af; border:1px solid #bfdbfe; }
 .aad-status.ok { background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; }
 .aad-status.warn { background:#fffbeb; color:#92400e; border:1px solid #fde68a; }
-.aad-actions { display:flex; gap:12px; align-items:center; margin-top:10px; text-align:left; }
-.aad-thumb { width:84px; height:56px; object-fit:cover; border-radius:8px; border:1px solid #cbd5e1; background:#fff; flex:0 0 auto; }
-.aad-btn-col { display:flex; flex-direction:column; gap:6px; flex:1; min-width:0; }
-.aad-btn-col button { width:100% !important; margin:0 !important; padding:8px 10px !important; font-size:0.76rem !important; border-radius:9px !important; color:#fff !important; }
+.aad-actions { background:#fff; border:1px solid #c7d2fe; border-radius:12px; padding:8px; text-align:center; }
+.aad-slot-title { font-size:0.72rem; font-weight:800; color:#3730a3; margin-bottom:6px; }
+.aad-thumb { width:100%; height:70px; object-fit:cover; border-radius:8px; border:1px solid #cbd5e1; background:#fff; display:block; margin-bottom:6px; }
+.aad-btn-col { display:flex; flex-direction:column; gap:5px; }
+.aad-btn-col button { width:100% !important; margin:0 !important; padding:7px 6px !important; font-size:0.72rem !important; border-radius:9px !important; color:#fff !important; }
 .aad-view-btn { background:#16a34a !important; }
 .aad-reup-btn { background:#d97706 !important; }
 .aad-rm-btn { background:#dc2626 !important; }
+.aad-all-btn { width:100% !important; margin:10px 0 0 0 !important; background:#2563eb !important; color:#fff !important; padding:9px !important; font-size:0.78rem !important; border-radius:10px !important; }
 .aad-view-btn-inline { width:auto !important; margin:0 !important; padding:4px 10px !important; font-size:0.7rem !important; background:#2563eb !important; color:#fff !important; border-radius:8px !important; }
-.aad-filled { animation:aadFlash 1.6s ease; }
+.aad-filled { animation:aadFlash 1.8s ease; }
 @keyframes aadFlash { 0%,60% { box-shadow:0 0 0 3px #86efac; border-color:#16a34a; } 100% { box-shadow:none; } }
 </style>
 
@@ -3754,18 +3759,38 @@
                 <h2 id="formTitle">Student Information</h2>
                 <input type="hidden" id="editId">
                 <div class="aad-box" id="aad-admin-box">
-                    <button type="button" class="aad-main-btn" id="aad-admin-main" onclick="aadPick('admin')">🪪 Detail Autofill by Aadhar Card</button>
-                    <div class="aad-hint" id="aad-admin-hint">Click here to upload your Aadhar card</div>
-                    <input type="file" id="aad-admin-file" accept="image/*" style="display:none;" onchange="aadHandleFile('admin', this)">
-                    <div class="aad-status" id="aad-admin-status" style="display:none;"></div>
-                    <div class="aad-actions" id="aad-admin-actions" style="display:none;">
-                        <img id="aad-admin-thumb" class="aad-thumb" alt="Aadhar" src="">
-                        <div class="aad-btn-col">
-                            <button type="button" class="aad-view-btn" onclick="aadShow(aadGet('admin'), 'Aadhar Card')">👁️ View Aadhar Card</button>
-                            <button type="button" class="aad-reup-btn" onclick="aadPick('admin')">🔄 Re-upload Aadhar Card</button>
-                            <button type="button" class="aad-rm-btn" onclick="aadRemove('admin')">🗑️ Remove</button>
+                    <div class="aad-slots">
+                        <div class="aad-slot">
+                        <button type="button" class="aad-main-btn" id="aad-admin-front-main" onclick="aadPick('admin','front')">🪪 Detail Autofill by Aadhar Card<span>⬆️ Upload Front Side</span></button>
+                        <input type="file" id="aad-admin-front-file" accept="image/*" style="display:none;" onchange="aadHandleFile('admin','front', this)">
+                        <div class="aad-actions" id="aad-admin-front-actions" style="display:none;">
+                            <div class="aad-slot-title">✅ Front Side</div>
+                            <img id="aad-admin-front-thumb" class="aad-thumb" alt="Front Side" src="">
+                            <div class="aad-btn-col">
+                                <button type="button" class="aad-view-btn" onclick="aadShow(aadGet('admin','front'), 'Front Side')">👁️ View</button>
+                                <button type="button" class="aad-reup-btn" onclick="aadPick('admin','front')">🔄 Re-upload</button>
+                                <button type="button" class="aad-rm-btn" onclick="aadRemove('admin','front')">🗑️ Remove</button>
+                            </div>
                         </div>
                     </div>
+                        <div class="aad-slot">
+                        <button type="button" class="aad-main-btn" id="aad-admin-back-main" onclick="aadPick('admin','back')">🪪 Detail Autofill by Aadhar Card<span>⬆️ Upload Back Side</span></button>
+                        <input type="file" id="aad-admin-back-file" accept="image/*" style="display:none;" onchange="aadHandleFile('admin','back', this)">
+                        <div class="aad-actions" id="aad-admin-back-actions" style="display:none;">
+                            <div class="aad-slot-title">✅ Back Side</div>
+                            <img id="aad-admin-back-thumb" class="aad-thumb" alt="Back Side" src="">
+                            <div class="aad-btn-col">
+                                <button type="button" class="aad-view-btn" onclick="aadShow(aadGet('admin','back'), 'Back Side')">👁️ View</button>
+                                <button type="button" class="aad-reup-btn" onclick="aadPick('admin','back')">🔄 Re-upload</button>
+                                <button type="button" class="aad-rm-btn" onclick="aadRemove('admin','back')">🗑️ Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="aad-hint">Click here to upload your Aadhar card</div>
+                    <div class="aad-sub">Upload the Front side and the Back side separately — details are filled automatically</div>
+                    <button type="button" class="aad-all-btn" id="aad-admin-all" style="display:none;" onclick="aadViewBoth('admin')">👁️ View Front &amp; Back Aadhar Card</button>
+                    <div class="aad-status" id="aad-admin-status" style="display:none;"></div>
                 </div>
 
                 <div class="grid-2-col">
@@ -7943,7 +7968,7 @@
         o.innerHTML = '<div style="background:#fff;border-radius:18px;max-width:440px;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:18px;box-sizing:border-box;text-align:left;">' +
             '<div style="display:flex;justify-content:space-between;align-items:center;"><h3 style="margin:0;font-size:1rem;">🔍 Review Registration</h3><button onclick="document.getElementById(\'pr-review-overlay\').remove()" style="width:auto;margin:0;padding:6px 12px;background:#94a3b8;font-size:0.72rem;">✕</button></div>' +
             '<div style="display:flex;gap:12px;align-items:center;margin:12px 0;">' + (r.photo ? '<img src="' + r.photo + '" style="width:64px;height:64px;border-radius:12px;object-fit:cover;cursor:zoom-in;" onclick="zoomPhoto(this.src)">' : '') + '<div><div style="font-weight:800;font-size:1rem;">' + prEsc(r.name) + '</div><div style="font-size:0.68rem;color:var(--grey);font-family:monospace;">' + prEsc(r.ref) + '</div></div></div>' +
-            '<table style="width:100%;font-size:0.78rem;border-collapse:collapse;">' + row('Guardian', prEsc(r.fname)) + row('Mobile', prEsc(r.mobile)) + row('Email', prEsc(r.email)) + row('Date of birth', prEsc(r.dob)) + row('Gender', prEsc(r.gender || '—')) + row('Aadhar No.', prEsc(r.aadhaar ? aadFmtNum(r.aadhaar) : '—')) + row('Aadhar Card', aadViewBtn('pend', r.id, r.aadhaarImg)) + row('Shift', prEsc(r.shiftName) + ' (₹' + r.amount + ')') + row('Requested seat', prEsc(r.seatLabel)) + row('Applied on', formatAppDate(r.submittedAt)) + '</table>' +
+            '<table style="width:100%;font-size:0.78rem;border-collapse:collapse;">' + row('Guardian', prEsc(r.fname)) + row('Mobile', prEsc(r.mobile)) + row('Email', prEsc(r.email)) + row('Date of birth', prEsc(r.dob)) + row('Gender', prEsc(r.gender || '—')) + row('Aadhar No.', prEsc(r.aadhaar ? aadFmtNum(r.aadhaar) : '—')) + row('Aadhar Card', aadViewBtn('pend', r.id, r.aadhaarImg || r.aadhaarImgBack)) + row('Shift', prEsc(r.shiftName) + ' (₹' + r.amount + ')') + row('Requested seat', prEsc(r.seatLabel)) + row('Applied on', formatAppDate(r.submittedAt)) + '</table>' +
             '<div style="margin:12px 0;">' + verify + '</div>' +
             (free ? '' : '<div style="background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:10px;padding:9px 11px;font-size:0.74rem;font-weight:700;margin-bottom:10px;">The requested seat ' + prEsc(r.seatLabel) + ' is no longer available. Please assign another seat below.</div>') +
             '<label style="font-size:0.74rem;font-weight:800;display:block;margin-bottom:6px;">Assign seat</label>' + seatPickerHtml('pr-review-seat', busy, free ? r.seat : 0) +
@@ -7962,7 +7987,7 @@
         o.innerHTML = '<div style="background:#fff;border-radius:18px;max-width:440px;width:100%;max-height:92vh;overflow-y:auto;padding:18px;box-sizing:border-box;text-align:left;">' +
             '<div style="display:flex;justify-content:space-between;align-items:center;"><h3 style="margin:0;font-size:1rem;">⏳ Review Waiting List Request</h3><button onclick="document.getElementById(\'pr-review-overlay\').remove()" style="width:auto;margin:0;padding:6px 12px;background:#94a3b8;font-size:0.72rem;">✕</button></div>' +
             '<div style="display:flex;gap:12px;align-items:center;margin:12px 0;">' + (r.photo ? '<img src="' + r.photo + '" style="width:64px;height:64px;border-radius:12px;object-fit:cover;">' : '') + '<div><div style="font-weight:800;font-size:1rem;">' + prEsc(r.name) + '</div><div style="font-size:0.7rem;color:#94a3b8;font-family:monospace;">' + prEsc(r.ref) + '</div></div></div>' +
-            '<table style="width:100%;font-size:0.78rem;border-collapse:collapse;">' + row('Guardian', prEsc(r.fname)) + row('Mobile', prEsc(r.mobile)) + row('Email', prEsc(r.email)) + row('Date of birth', prEsc(r.dob)) + row('Gender', prEsc(r.gender || '—')) + row('Aadhar No.', prEsc(r.aadhaar ? aadFmtNum(r.aadhaar) : '—')) + row('Aadhar Card', aadViewBtn('pend', r.id, r.aadhaarImg)) + row('Shift', prEsc(r.shiftName) + ' (₹' + r.amount + ')') + '</table>' +
+            '<table style="width:100%;font-size:0.78rem;border-collapse:collapse;">' + row('Guardian', prEsc(r.fname)) + row('Mobile', prEsc(r.mobile)) + row('Email', prEsc(r.email)) + row('Date of birth', prEsc(r.dob)) + row('Gender', prEsc(r.gender || '—')) + row('Aadhar No.', prEsc(r.aadhaar ? aadFmtNum(r.aadhaar) : '—')) + row('Aadhar Card', aadViewBtn('pend', r.id, r.aadhaarImg || r.aadhaarImgBack)) + row('Shift', prEsc(r.shiftName) + ' (₹' + r.amount + ')') + '</table>' +
             '<div style="margin:12px 0;">' + verify + '</div>' +
             '<div style="background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:10px;padding:9px 11px;font-size:0.74rem;font-weight:700;margin-bottom:10px;">Approving adds this student to the Waiting List of this shift. A seat is allotted automatically when one becomes free.</div>' +
             '<div style="display:flex;gap:8px;margin-top:14px;"><button style="background:#16a34a;flex:2;margin:0;" onclick="approveWaitlistReg(\'' + r.id + '\')">✅ Approve &amp; Add to Waiting List</button><button style="background:#dc2626;flex:1;margin:0;" onclick="document.getElementById(\'pr-review-overlay\').remove(); rejectPendingReg(\'' + r.id + '\')">❌ Reject</button></div></div>';
@@ -7973,7 +7998,7 @@
         const sh = config.shifts.find(x => x.id === r.shift); if (!sh) { alert('Shift not found.'); return; }
         if ((waitingList || []).some(w => w.status === 'waiting' && String(w.mobile) === String(r.mobile) && w.shift === r.shift)) { alert('This mobile number is already on the Waiting List for this shift.'); return; }
         const wlId = 'WL' + generateUniqueRegDigits(), nowIso = new Date().toISOString();
-        waitingList.push({ id: wlId, name: r.name, fname: r.fname, mobile: r.mobile, email: r.email, dob: r.dob, gender: r.gender || '', aadhaar: r.aadhaar || '', aadhaarImg: r.aadhaarImg || null, photo: r.photo, shift: r.shift, shiftName: sh.name, amount: r.amount, mode: r.mode, payApp: r.payApp, txnId: r.txnId, requestedAt: nowIso, status: 'waiting', source: 'student', appRef: r.ref });
+        waitingList.push({ id: wlId, name: r.name, fname: r.fname, mobile: r.mobile, email: r.email, dob: r.dob, gender: r.gender || '', aadhaar: r.aadhaar || '', aadhaarImg: r.aadhaarImg || null, aadhaarImgBack: r.aadhaarImgBack || null, photo: r.photo, shift: r.shift, shiftName: sh.name, amount: r.amount, mode: r.mode, payApp: r.payApp, txnId: r.txnId, requestedAt: nowIso, status: 'waiting', source: 'student', appRef: r.ref });
         r.status = 'approved'; r.decidedAt = nowIso; r.waitlistId = wlId;
         saveToLocal();
         const ov = document.getElementById('pr-review-overlay'); if (ov) ov.remove();
@@ -7994,7 +8019,7 @@
         let regNo; do { regNo = 'REG' + Math.floor(1000000000 + Math.random() * 9000000000).toString().slice(0, 10); } while ((students || []).some(x => x.regNo === regNo));
         const nowIso = new Date().toISOString(), online = r.mode === 'Online';
         const fee = [{ month: nowIso.slice(0, 7), entryDate: nowIso, amount: r.amount, mode: r.mode, payApp: online ? r.payApp : 'Cash', txnId: online ? r.txnId : 'N/A', status: 'PAID', seatAtTime: seat, seatLabelAtTime: seatLabel(seat), shiftAtTime: sh.name, verifiedByAdmin: true }];
-        students.push({ id: regNo, regNo: regNo, date: nowIso, name: r.name, fname: r.fname, mobile: r.mobile, email: r.email, dob: r.dob, gender: r.gender || '', aadhaar: r.aadhaar || '', aadhaarImg: r.aadhaarImg || null, shift: r.shift, shiftName: sh.name, mode: r.mode, payApp: online ? r.payApp : 'N/A', txnId: online ? r.txnId : 'N/A', seat: seat, amount: r.amount, photo: r.photo, feeHistory: fee, registeredVia: 'Online Application', appRef: r.ref });
+        students.push({ id: regNo, regNo: regNo, date: nowIso, name: r.name, fname: r.fname, mobile: r.mobile, email: r.email, dob: r.dob, gender: r.gender || '', aadhaar: r.aadhaar || '', aadhaarImg: r.aadhaarImg || null, aadhaarImgBack: r.aadhaarImgBack || null, shift: r.shift, shiftName: sh.name, mode: r.mode, payApp: online ? r.payApp : 'N/A', txnId: online ? r.txnId : 'N/A', seat: seat, amount: r.amount, photo: r.photo, feeHistory: fee, registeredVia: 'Online Application', appRef: r.ref });
         db[r.shift] = db[r.shift] || []; db[r.shift].push(seat);
         r.status = 'approved'; r.regNo = regNo; r.decidedAt = nowIso; r.approvedSeat = seat; r.approvedSeatLabel = seatLabel(seat);
         saveToLocal();
@@ -9966,7 +9991,7 @@
         const rec = {
             id: 'PR' + Date.now() + Math.floor(Math.random() * 1000), ref: ref, status: 'pending', submittedAt: new Date().toISOString(), source: 'student',
             name: document.getElementById('pr-name').value.trim(), fname: document.getElementById('pr-fname').value.trim(), mobile: mobile,
-            email: document.getElementById('pr-email').value.trim(), dob: document.getElementById('pr-dob').value, gender: document.getElementById('pr-gender').value, aadhaar: aadDigits(document.getElementById('pr-aadhaar').value), aadhaarImg: aadGet('pr'), photo: _pr.photo,
+            email: document.getElementById('pr-email').value.trim(), dob: document.getElementById('pr-dob').value, gender: document.getElementById('pr-gender').value, aadhaar: aadDigits(document.getElementById('pr-aadhaar').value), aadhaarImg: aadGet('pr','front'), aadhaarImgBack: aadGet('pr','back'), photo: _pr.photo,
             shift: sh.id, shiftName: sh.name, seat: _pr.seat, seatLabel: prLabel(_pr.seat), amount: sh.price,
             mode: mode, payApp: mode === 'Online' ? app : 'Cash', txnId: mode === 'Online' ? txn : 'N/A'
         };
@@ -10012,7 +10037,7 @@
         const rec = {
             id: 'PR' + Date.now() + Math.floor(Math.random() * 1000), ref: ref, status: 'pending', submittedAt: new Date().toISOString(), source: 'student', waitlist: true,
             name: document.getElementById('pr-name').value.trim(), fname: document.getElementById('pr-fname').value.trim(), mobile: mobile,
-            email: document.getElementById('pr-email').value.trim(), dob: document.getElementById('pr-dob').value, gender: document.getElementById('pr-gender').value, aadhaar: aadDigits(document.getElementById('pr-aadhaar').value), aadhaarImg: aadGet('pr'), photo: _pr.photo,
+            email: document.getElementById('pr-email').value.trim(), dob: document.getElementById('pr-dob').value, gender: document.getElementById('pr-gender').value, aadhaar: aadDigits(document.getElementById('pr-aadhaar').value), aadhaarImg: aadGet('pr','front'), aadhaarImgBack: aadGet('pr','back'), photo: _pr.photo,
             shift: sh.id, shiftName: sh.name, seat: null, seatLabel: '', amount: sh.price,
             mode: mode, payApp: mode === 'Online' ? app : 'Cash', txnId: mode === 'Online' ? txn : 'N/A'
         };
@@ -10386,7 +10411,7 @@
             }
             const studentName = document.getElementById('name').value;
             const oldRec = editId ? students.find(x => x.id === editId) : null;
-            let data = { id:editId||regNo, regNo, date:originalDate, name:studentName, fname:document.getElementById('fname').value, mobile:document.getElementById('mobile').value, email:document.getElementById('email').value, dob:document.getElementById('dob').value, gender:document.getElementById('gender').value, aadhaar:aadDigits(document.getElementById('aadhaar').value), aadhaarImg:aadGet('admin'), shift:sid, shiftName:sInfo.name, mode:finalMode, payApp:finalApp, txnId:finalTxn, seat:selectedSeat, amount:sInfo.price, photo:photoData, feeHistory:existingFeeHistory };
+            let data = { id:editId||regNo, regNo, date:originalDate, name:studentName, fname:document.getElementById('fname').value, mobile:document.getElementById('mobile').value, email:document.getElementById('email').value, dob:document.getElementById('dob').value, gender:document.getElementById('gender').value, aadhaar:aadDigits(document.getElementById('aadhaar').value), aadhaarImg:aadGet('admin','front'), aadhaarImgBack:aadGet('admin','back'), shift:sid, shiftName:sInfo.name, mode:finalMode, payApp:finalApp, txnId:finalTxn, seat:selectedSeat, amount:sInfo.price, photo:photoData, feeHistory:existingFeeHistory };
             // Editing never creates a new student: start from the existing record and overwrite only what the form edits,
             // so block status + block history, ticket restriction, disabled attendance, seat history etc. all stay exactly as they are.
             if (oldRec) { data = Object.assign({}, oldRec, data); data.seatFreedInfo = null; }
@@ -10466,7 +10491,7 @@
             mobile: document.getElementById('mobile').value,
             email: document.getElementById('email').value,
             dob: document.getElementById('dob').value,
-            gender: document.getElementById('gender').value, aadhaar: aadDigits(document.getElementById('aadhaar').value), aadhaarImg: aadGet('admin'),
+            gender: document.getElementById('gender').value, aadhaar: aadDigits(document.getElementById('aadhaar').value), aadhaarImg: aadGet('admin','front'), aadhaarImgBack: aadGet('admin','back'),
             shift: sid, shiftName: sInfo.name,
             seat: selectedSeat, amount: sInfo.price,
             photo: photoData, feeHistory: [],
@@ -10586,7 +10611,7 @@
                 }
                 ex.seat = seatNo;
                 if (sInfo && ex.shift !== entry.shift) { ex.shift = entry.shift; ex.shiftName = sInfo.name; }
-                ex.name = entry.name || ex.name; ex.fname = entry.fname || ex.fname; ex.mobile = entry.mobile || ex.mobile; ex.email = entry.email || ex.email; ex.dob = entry.dob || ex.dob; ex.gender = entry.gender || ex.gender; ex.aadhaar = entry.aadhaar || ex.aadhaar; if (entry.aadhaarImg) ex.aadhaarImg = entry.aadhaarImg; if (entry.photo) ex.photo = entry.photo;
+                ex.name = entry.name || ex.name; ex.fname = entry.fname || ex.fname; ex.mobile = entry.mobile || ex.mobile; ex.email = entry.email || ex.email; ex.dob = entry.dob || ex.dob; ex.gender = entry.gender || ex.gender; ex.aadhaar = entry.aadhaar || ex.aadhaar; if (entry.aadhaarImg) ex.aadhaarImg = entry.aadhaarImg; if (entry.aadhaarImgBack) ex.aadhaarImgBack = entry.aadhaarImgBack; if (entry.photo) ex.photo = entry.photo;
                 if (!db[ex.shift]) db[ex.shift] = [];
                 db[ex.shift].push(seatNo);
                 ex.seatFreedInfo = null;
@@ -10603,7 +10628,7 @@
             const newStudent = {
                 id: regNo, regNo,
                 date: new Date().toISOString(),
-                name: entry.name, fname: entry.fname, mobile: entry.mobile, email: entry.email, dob: entry.dob, gender: entry.gender || '', aadhaar: entry.aadhaar || '', aadhaarImg: entry.aadhaarImg || null,
+                name: entry.name, fname: entry.fname, mobile: entry.mobile, email: entry.email, dob: entry.dob, gender: entry.gender || '', aadhaar: entry.aadhaar || '', aadhaarImg: entry.aadhaarImg || null, aadhaarImgBack: entry.aadhaarImgBack || null,
                 shift: entry.shift, shiftName: sInfo ? sInfo.name : entry.shiftName,
                 mode: entry.mode, payApp: entry.payApp, txnId: entry.txnId,
                 seat: seatNo, amount: sInfo ? sInfo.price : entry.amount,
@@ -10641,13 +10666,13 @@
         const nm = document.getElementById('name').value.trim(), fn = document.getElementById('fname').value.trim(), mob = document.getElementById('mobile').value.trim(), em = document.getElementById('email').value.trim(), dob = document.getElementById('dob').value, sid = document.getElementById('shift').value;
         if (!nm || !/^\d{10}$/.test(mob) || !sid) { alert('Please go back and complete the name, a 10-digit mobile number and the shift first.'); return; }
         const sInfo = config.shifts.find(x => x.id === sid); if (!sInfo) { alert('Selected shift not found.'); return; }
-        st.name = nm; st.fname = fn; st.mobile = mob; st.email = em; st.dob = dob; st.gender = document.getElementById('gender').value || st.gender || ''; st.aadhaar = aadDigits(document.getElementById('aadhaar').value) || st.aadhaar || ''; if (aadGet('admin')) st.aadhaarImg = aadGet('admin');
+        st.name = nm; st.fname = fn; st.mobile = mob; st.email = em; st.dob = dob; st.gender = document.getElementById('gender').value || st.gender || ''; st.aadhaar = aadDigits(document.getElementById('aadhaar').value) || st.aadhaar || ''; if (aadGet('admin','front')) st.aadhaarImg = aadGet('admin','front'); if (aadGet('admin','back')) st.aadhaarImgBack = aadGet('admin','back');
         if (typeof photoData !== 'undefined' && photoData) st.photo = photoData;
         const shiftChanged = st.shift !== sid;
         if (shiftChanged) { st.shift = sid; st.shiftName = sInfo.name; st.amount = sInfo.price; }
         const w = (waitingList || []).find(x => x.status === 'waiting' && x.existingStudentId === st.id);
         if (w) {
-            w.name = st.name; w.fname = st.fname; w.mobile = st.mobile; w.email = st.email; w.dob = st.dob; w.gender = st.gender; w.aadhaar = st.aadhaar; w.aadhaarImg = st.aadhaarImg; if (st.photo) w.photo = st.photo;
+            w.name = st.name; w.fname = st.fname; w.mobile = st.mobile; w.email = st.email; w.dob = st.dob; w.gender = st.gender; w.aadhaar = st.aadhaar; w.aadhaarImg = st.aadhaarImg; w.aadhaarImgBack = st.aadhaarImgBack; if (st.photo) w.photo = st.photo;
             if (shiftChanged) { w.shift = sid; w.shiftName = sInfo.name; w.amount = sInfo.price; }
         }
         saveToLocal();
@@ -10685,7 +10710,7 @@
             mobile: document.getElementById('mobile').value,
             email: document.getElementById('email').value,
             dob: document.getElementById('dob').value,
-            gender: document.getElementById('gender').value, aadhaar: aadDigits(document.getElementById('aadhaar').value), aadhaarImg: aadGet('admin'),
+            gender: document.getElementById('gender').value, aadhaar: aadDigits(document.getElementById('aadhaar').value), aadhaarImg: aadGet('admin','front'), aadhaarImgBack: aadGet('admin','back'),
             photo: photoData,
             shift: sid, shiftName: sInfo ? sInfo.name : '',
             amount: sInfo ? sInfo.price : 0,
@@ -11131,7 +11156,7 @@
         if (err) return;
         if ((waitingList || []).some(w => w.status === 'waiting' && String(w.mobile) === String(newMobile) && w.shift === s.shift)) { alert('This mobile number is already on the Waiting List for this shift.'); return; }
         const wlId = 'WL' + generateUniqueRegDigits(), nowIso = new Date().toISOString();
-        waitingList.push({ id: wlId, name: document.getElementById('demo-edit-name').value.trim() || s.name, fname: document.getElementById('demo-edit-fname').value.trim() || s.fname, mobile: newMobile, email: newEmail, dob: newDob, gender: s.gender || '', aadhaar: s.aadhaar || '', aadhaarImg: s.aadhaarImg || null, photo: s.photo, shift: s.shift, shiftName: sh.name, amount: sh.price, mode: method, payApp: method === 'Online' ? app : 'N/A', txnId: method === 'Online' ? txn : 'N/A', requestedAt: nowIso, status: 'waiting', source: 'demo' });
+        waitingList.push({ id: wlId, name: document.getElementById('demo-edit-name').value.trim() || s.name, fname: document.getElementById('demo-edit-fname').value.trim() || s.fname, mobile: newMobile, email: newEmail, dob: newDob, gender: s.gender || '', aadhaar: s.aadhaar || '', aadhaarImg: s.aadhaarImg || null, aadhaarImgBack: s.aadhaarImgBack || null, photo: s.photo, shift: s.shift, shiftName: sh.name, amount: sh.price, mode: method, payApp: method === 'Online' ? app : 'N/A', txnId: method === 'Online' ? txn : 'N/A', requestedAt: nowIso, status: 'waiting', source: 'demo' });
         students = students.filter(x => x.id !== s.id);
         saveToLocal(); closeDemoConfirmModal();
         const pos = waitingList.filter(w => w.status === 'waiting' && w.shift === s.shift).findIndex(w => w.id === wlId) + 1;
@@ -11578,7 +11603,7 @@
             ${row('Date of Birth', s.dob ? formatAppDate(s.dob) : '—')}
             ${row('Gender', prEsc(s.gender || '—'))}
             ${row('Aadhar Number', prEsc(s.aadhaar ? aadFmtNum(s.aadhaar) : '—'))}
-            ${row('Aadhar Card', aadViewBtn('stu', s.id, s.aadhaarImg))}
+            ${row('Aadhar Card', aadViewBtn('stu', s.id, s.aadhaarImg || s.aadhaarImgBack))}
         </div>`;
     }
     function studentInfoLink(s) {
@@ -15073,7 +15098,7 @@ function subAskAutoRenew(req, cb){
         document.getElementById('fname').value = s.fname; document.getElementById('mobile').value = s.mobile;
         document.getElementById('email').value = s.email; document.getElementById('shift').value = s.shift;
         document.getElementById('dob').value = s.dob || '';
-        document.getElementById('gender').value = s.gender || ''; document.getElementById('aadhaar').value = s.aadhaar ? aadFmtNum(s.aadhaar) : ''; aadSet('admin', s.aadhaarImg || null);
+        document.getElementById('gender').value = s.gender || ''; document.getElementById('aadhaar').value = s.aadhaar ? aadFmtNum(s.aadhaar) : ''; aadSet('admin', s.aadhaarImg || null, s.aadhaarImgBack || null);
         const payMethodSelect = document.getElementById('payMethod'); payMethodSelect.value = s.mode; payMethodSelect.disabled = true;
         const payAppSelect = document.getElementById('payApp'); const txnInput = document.getElementById('txnId');
         if (s.mode === "Online") {
@@ -15170,7 +15195,7 @@ function subAskAutoRenew(req, cb){
         if (reseatFreeCount(sh, st.id).free > 0) { alert('A seat is available now — please choose a seat instead.'); openReseatModal(st.id); return; }
         if ((waitingList || []).some(w => w.status === 'waiting' && w.existingStudentId === st.id)) { alert('This student is already on the Waiting List.'); return; }
         const wlId = 'WL' + generateUniqueRegDigits();
-        waitingList.push({ id: wlId, existingStudentId: st.id, name: st.name, fname: st.fname, mobile: st.mobile, email: st.email, dob: st.dob, gender: st.gender || '', aadhaar: st.aadhaar || '', aadhaarImg: st.aadhaarImg || null, photo: st.photo, shift: st.shift, shiftName: sh.name, amount: sh.price, mode: st.mode || 'Cash', payApp: st.payApp || 'N/A', txnId: st.txnId || 'N/A', requestedAt: new Date().toISOString(), status: 'waiting' });
+        waitingList.push({ id: wlId, existingStudentId: st.id, name: st.name, fname: st.fname, mobile: st.mobile, email: st.email, dob: st.dob, gender: st.gender || '', aadhaar: st.aadhaar || '', aadhaarImg: st.aadhaarImg || null, aadhaarImgBack: st.aadhaarImgBack || null, photo: st.photo, shift: st.shift, shiftName: sh.name, amount: sh.price, mode: st.mode || 'Cash', payApp: st.payApp || 'N/A', txnId: st.txnId || 'N/A', requestedAt: new Date().toISOString(), status: 'waiting' });
         saveToLocal(); closeReseatModal();
         const pos = waitingList.filter(w => w.status === 'waiting' && w.shift === st.shift).findIndex(w => w.id === wlId) + 1;
         alert('Added to the Waiting List.\n\nWaiting List ID: ' + wlId + '\nShift: ' + sh.name + '\nPosition (this shift): ' + pos + '\n\nA seat will be allotted automatically when one becomes free.');
@@ -20744,18 +20769,38 @@ The **Library Lost & Found service is provided free of charge**. The Library doe
             <div id="pr-step1">
                 <div style="font-size:0.72rem; color:#475569; background:#f0f9ff; border:1px solid #bae6fd; border-radius:10px; padding:9px 11px; margin-bottom:14px; line-height:1.5;">Step 1 of 2 — Student information. Your registration number is generated only after the library approves your application.</div>
                 <div class="aad-box" id="aad-pr-box">
-                    <button type="button" class="aad-main-btn" id="aad-pr-main" onclick="aadPick('pr')">🪪 Detail Autofill by Aadhar Card</button>
-                    <div class="aad-hint" id="aad-pr-hint">Click here to upload your Aadhar card</div>
-                    <input type="file" id="aad-pr-file" accept="image/*" style="display:none;" onchange="aadHandleFile('pr', this)">
-                    <div class="aad-status" id="aad-pr-status" style="display:none;"></div>
-                    <div class="aad-actions" id="aad-pr-actions" style="display:none;">
-                        <img id="aad-pr-thumb" class="aad-thumb" alt="Aadhar" src="">
-                        <div class="aad-btn-col">
-                            <button type="button" class="aad-view-btn" onclick="aadShow(aadGet('pr'), 'Aadhar Card')">👁️ View Aadhar Card</button>
-                            <button type="button" class="aad-reup-btn" onclick="aadPick('pr')">🔄 Re-upload Aadhar Card</button>
-                            <button type="button" class="aad-rm-btn" onclick="aadRemove('pr')">🗑️ Remove</button>
+                    <div class="aad-slots">
+                        <div class="aad-slot">
+                        <button type="button" class="aad-main-btn" id="aad-pr-front-main" onclick="aadPick('pr','front')">🪪 Detail Autofill by Aadhar Card<span>⬆️ Upload Front Side</span></button>
+                        <input type="file" id="aad-pr-front-file" accept="image/*" style="display:none;" onchange="aadHandleFile('pr','front', this)">
+                        <div class="aad-actions" id="aad-pr-front-actions" style="display:none;">
+                            <div class="aad-slot-title">✅ Front Side</div>
+                            <img id="aad-pr-front-thumb" class="aad-thumb" alt="Front Side" src="">
+                            <div class="aad-btn-col">
+                                <button type="button" class="aad-view-btn" onclick="aadShow(aadGet('pr','front'), 'Front Side')">👁️ View</button>
+                                <button type="button" class="aad-reup-btn" onclick="aadPick('pr','front')">🔄 Re-upload</button>
+                                <button type="button" class="aad-rm-btn" onclick="aadRemove('pr','front')">🗑️ Remove</button>
+                            </div>
                         </div>
                     </div>
+                        <div class="aad-slot">
+                        <button type="button" class="aad-main-btn" id="aad-pr-back-main" onclick="aadPick('pr','back')">🪪 Detail Autofill by Aadhar Card<span>⬆️ Upload Back Side</span></button>
+                        <input type="file" id="aad-pr-back-file" accept="image/*" style="display:none;" onchange="aadHandleFile('pr','back', this)">
+                        <div class="aad-actions" id="aad-pr-back-actions" style="display:none;">
+                            <div class="aad-slot-title">✅ Back Side</div>
+                            <img id="aad-pr-back-thumb" class="aad-thumb" alt="Back Side" src="">
+                            <div class="aad-btn-col">
+                                <button type="button" class="aad-view-btn" onclick="aadShow(aadGet('pr','back'), 'Back Side')">👁️ View</button>
+                                <button type="button" class="aad-reup-btn" onclick="aadPick('pr','back')">🔄 Re-upload</button>
+                                <button type="button" class="aad-rm-btn" onclick="aadRemove('pr','back')">🗑️ Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="aad-hint">Click here to upload your Aadhar card</div>
+                    <div class="aad-sub">Upload the Front side and the Back side separately — details are filled automatically</div>
+                    <button type="button" class="aad-all-btn" id="aad-pr-all" style="display:none;" onclick="aadViewBoth('pr')">👁️ View Front &amp; Back Aadhar Card</button>
+                    <div class="aad-status" id="aad-pr-status" style="display:none;"></div>
                 </div>
 
                 <div class="grid-2-col">
@@ -21724,33 +21769,43 @@ function wlInitSearchBars(){
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wlInitSearchBars); else wlInitSearchBars();
 </script>
-
 <script>
 /* ============================================================
-   AADHAR CARD — upload, OCR autofill, save & view
+   AADHAR CARD — Front + Back upload, QR/OCR autofill, save & view
    Used by: Admin Dashboard registration (prefix 'admin')
             Login-page New Student Registration (prefix 'pr')
+
+   WHERE EACH DETAIL IS ON AN AADHAR CARD (this is what the reader follows):
+     FRONT : Applicant name (English line just ABOVE the DOB line), DOB, Gender,
+             12-digit Aadhar number (bottom), QR code
+     BACK  : Address block -> "S/O | D/O | W/O | C/O  <name>"  = Father / Guardian,
+             Aadhar number again, QR code (on some cards)
+     QR    : Name, DOB, Gender, Care-of (father) – exact data signed by UIDAI,
+             but only the LAST 4 digits of the Aadhar number
+   Rules: Applicant name is NEVER read from the back; Father name is NEVER taken
+          from the front's name line. QR data always beats text reading (OCR).
    ============================================================ */
 (function () {
-    var AAD = { admin: { img: null }, pr: { img: null } };
+    var AAD = { admin: { front: null, back: null }, pr: { front: null, back: null } };
     var IDS = {
         admin: { name: 'name', fname: 'fname', dob: 'dob', gender: 'gender', num: 'aadhaar', eg: 'err-gender', ea: 'err-aadhaar', en: 'err-name', ef: 'err-fname', ed: 'err-dob' },
         pr:    { name: 'pr-name', fname: 'pr-fname', dob: 'pr-dob', gender: 'pr-gender', num: 'pr-aadhaar', eg: 'err-pr-gender', ea: 'err-pr-aadhaar', en: 'err-pr-name', ef: 'err-pr-fname', ed: 'err-pr-dob' }
     };
+    var LABEL = { name: 'Applicant Name', fname: "Father / Guardian Name", dob: 'Date of Birth', gender: 'Gender', num: 'Aadhar Number' };
     function $(id) { return document.getElementById(id); }
     function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
-    /* ---------- small helpers used everywhere ---------- */
-    window.aadGet = function (p) { return AAD[p] ? AAD[p].img : null; };
+    /* ---------- helpers used everywhere ---------- */
+    window.aadGet = function (p, side) { return AAD[p] ? AAD[p][side || 'front'] : null; };
     window.aadDigits = function (v) { return String(v || '').replace(/\D/g, ''); };
     window.aadFmtNum = function (v) { var d = aadDigits(v).slice(0, 12); return d.replace(/(\d{4})(?=\d)/g, '$1 ').trim(); };
     window.aadFmt = function (el) { el.value = aadFmtNum(el.value); };
     window.aadValid = function (v) { return /^[2-9]\d{11}$/.test(aadDigits(v)); };
     window.aadMask = function (v) { var d = aadDigits(v); return d.length === 12 ? 'XXXX XXXX ' + d.slice(8) : (v || '—'); };
 
-    /* ---------- view button + viewer ---------- */
-    window.aadViewBtn = function (kind, id, img) {
-        if (!img) return '<span style="color:#94a3b8;font-weight:700;">Not uploaded</span>';
+    /* ---------- viewer (shows front and back) ---------- */
+    window.aadViewBtn = function (kind, id, anyImg) {
+        if (!anyImg) return '<span style="color:#94a3b8;font-weight:700;">Not uploaded</span>';
         return '<button type="button" class="aad-view-btn-inline" onclick="aadViewRec(\'' + kind + '\', \'' + String(id).replace(/'/g, '') + '\')">👁️ View Aadhar Card</button>';
     };
     window.aadViewRec = function (kind, id) {
@@ -21759,36 +21814,44 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
             if (kind === 'stu') rec = (students || []).find(function (x) { return x.id === id; });
             else if (kind === 'pend') rec = (pendingRegs || []).find(function (x) { return x.id === id; });
         } catch (e) {}
-        aadShow(rec && rec.aadhaarImg, 'Aadhar Card' + (rec && rec.name ? ' — ' + rec.name : ''));
+        if (!rec) { alert('Record not found.'); return; }
+        aadShowMany([{ label: 'Front Side', src: rec.aadhaarImg }, { label: 'Back Side', src: rec.aadhaarImgBack }], 'Aadhar Card' + (rec.name ? ' — ' + rec.name : ''));
     };
-    window.aadShow = function (src, title) {
-        if (!src) { alert('No Aadhar card has been uploaded.'); return; }
+    window.aadShow = function (src, title) { aadShowMany([{ label: title || 'Aadhar Card', src: src }], title); };
+    window.aadShowMany = function (list, title) {
+        list = (list || []).filter(function (x) { return x && x.src; });
+        if (!list.length) { alert('No Aadhar card has been uploaded.'); return; }
         var old = $('aad-viewer'); if (old) old.remove();
         var o = document.createElement('div'); o.id = 'aad-viewer';
         o.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.82);z-index:2000000;display:flex;align-items:center;justify-content:center;padding:14px;box-sizing:border-box;';
         o.onclick = function (e) { if (e.target === o) o.remove(); };
+        var body = list.map(function (x, i) {
+            return '<div style="margin-bottom:14px;"><div style="font-size:0.78rem;font-weight:800;color:#3730a3;text-align:left;margin-bottom:5px;">' + esc(x.label) + '</div>' +
+                '<img src="' + x.src + '" alt="' + esc(x.label) + '" style="max-width:100%;border-radius:10px;border:1px solid #e2e8f0;">' +
+                '<div style="margin-top:6px;"><a href="' + x.src + '" download="aadhar-' + esc(String(x.label).toLowerCase().replace(/\s+/g, '-')) + '.jpg" style="display:inline-block;background:#2563eb;color:#fff;font-weight:800;font-size:0.72rem;padding:6px 14px;border-radius:8px;text-decoration:none;">⬇️ Download</a></div></div>';
+        }).join('');
         o.innerHTML = '<div style="background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:94vh;overflow:auto;padding:14px;box-sizing:border-box;text-align:center;">' +
-            '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;"><b style="font-size:0.9rem;text-align:left;">🪪 ' + esc(title || 'Aadhar Card') + '</b>' +
-            '<button type="button" onclick="document.getElementById(\'aad-viewer\').remove()" style="width:auto;margin:0;padding:6px 12px;background:#64748b;color:#fff;font-size:0.74rem;">✕ Close</button></div>' +
-            '<img src="' + src + '" alt="Aadhar Card" style="max-width:100%;max-height:72vh;border-radius:10px;border:1px solid #e2e8f0;">' +
-            '<div style="margin-top:10px;"><a href="' + src + '" download="aadhar-card.jpg" style="display:inline-block;background:#2563eb;color:#fff;font-weight:800;font-size:0.76rem;padding:8px 16px;border-radius:9px;text-decoration:none;">⬇️ Download</a></div></div>';
+            '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;"><b style="font-size:0.9rem;text-align:left;">🪪 ' + esc(title || 'Aadhar Card') + '</b>' +
+            '<button type="button" onclick="document.getElementById(\'aad-viewer\').remove()" style="width:auto;margin:0;padding:6px 12px;background:#64748b;color:#fff;font-size:0.74rem;">✕ Close</button></div>' + body + '</div>';
         document.body.appendChild(o);
     };
 
     /* ---------- widget UI state ---------- */
     function status(p, html, cls) { var el = $('aad-' + p + '-status'); if (!el) return; if (!html) { el.style.display = 'none'; el.innerHTML = ''; return; } el.className = 'aad-status ' + (cls || 'info'); el.innerHTML = html; el.style.display = 'block'; }
     function ui(p) {
-        var has = !!AAD[p].img;
-        var m = $('aad-' + p + '-main'), h = $('aad-' + p + '-hint'), a = $('aad-' + p + '-actions'), t = $('aad-' + p + '-thumb');
-        if (!m) return;
-        m.style.display = has ? 'none' : 'block'; h.style.display = has ? 'none' : 'block';
-        a.style.display = has ? 'flex' : 'none';
-        if (t) t.src = has ? AAD[p].img : '';
+        ['front', 'back'].forEach(function (side) {
+            var has = !!AAD[p][side], m = $('aad-' + p + '-' + side + '-main'), a = $('aad-' + p + '-' + side + '-actions'), t = $('aad-' + p + '-' + side + '-thumb');
+            if (!m) return;
+            m.style.display = has ? 'none' : 'block'; a.style.display = has ? 'block' : 'none';
+            if (t) t.src = has ? AAD[p][side] : '';
+        });
+        var all = $('aad-' + p + '-all'); if (all) all.style.display = (AAD[p].front && AAD[p].back) ? 'block' : 'none';
     }
-    window.aadSet = function (p, img) { AAD[p].img = img || null; status(p, ''); ui(p); };
-    window.aadReset = function (p) { AAD[p].img = null; var f = $('aad-' + p + '-file'); if (f) f.value = ''; status(p, ''); ui(p); };
-    window.aadRemove = function (p) { if (!confirm('Remove the uploaded Aadhar card?')) return; aadReset(p); };
-    window.aadPick = function (p) { var f = $('aad-' + p + '-file'); if (f) f.click(); };
+    window.aadSet = function (p, front, back) { AAD[p].front = front || null; AAD[p].back = back || null; status(p, ''); ui(p); };
+    window.aadReset = function (p) { AAD[p].front = null; AAD[p].back = null; ['front', 'back'].forEach(function (s) { var f = $('aad-' + p + '-' + s + '-file'); if (f) f.value = ''; }); status(p, ''); ui(p); };
+    window.aadRemove = function (p, side) { if (!confirm('Remove the uploaded ' + (side === 'front' ? 'FRONT' : 'BACK') + ' side of the Aadhar card?')) return; AAD[p][side] = null; status(p, ''); ui(p); };
+    window.aadPick = function (p, side) { var f = $('aad-' + p + '-' + side + '-file'); if (f) f.click(); };
+    window.aadViewBoth = function (p) { aadShowMany([{ label: 'Front Side', src: AAD[p].front }, { label: 'Back Side', src: AAD[p].back }], 'Aadhar Card'); };
 
     /* ---------- image helpers ---------- */
     function toCanvas(img, max, gray) {
@@ -21799,9 +21862,17 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
         x.drawImage(img, 0, 0, c.width, c.height);
         return c;
     }
+    function loadScript(src, test) {
+        return new Promise(function (res, rej) {
+            if (test()) return res();
+            var s = document.createElement('script'); s.src = src; s.onload = res;
+            s.onerror = function () { rej(new Error('load ' + src)); };
+            document.head.appendChild(s);
+        });
+    }
 
     /* ---------- file chosen ---------- */
-    window.aadHandleFile = function (p, inp) {
+    window.aadHandleFile = function (p, side, inp) {
         var f = inp.files && inp.files[0]; inp.value = ''; if (!f) return;
         if (!/^image\//.test(f.type)) { alert('Please upload a photo / scan of the Aadhar card (JPG, PNG or WEBP image).'); return; }
         if (f.size > 15 * 1024 * 1024) { alert('This file is too large. Please upload an image under 15 MB.'); return; }
@@ -21811,39 +21882,79 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
             var img = new Image();
             img.onerror = function () { alert('This image could not be opened. Please upload a clear JPG or PNG.'); };
             img.onload = function () {
-                AAD[p].img = toCanvas(img, 1100, false).toDataURL('image/jpeg', 0.72);   // what gets saved
+                AAD[p][side] = toCanvas(img, 1000, false).toDataURL('image/jpeg', 0.68);   // what gets saved
                 ui(p);
-                status(p, '⏳ Reading your Aadhar card… (first time may take a few seconds)', 'info');
-                ocr(p, toCanvas(img, 1700, true));
+                processSide(p, side, img);
             };
             img.src = rd.result;
         };
         rd.readAsDataURL(f);
     };
 
-    /* ---------- OCR (Tesseract.js, loaded only when needed) ---------- */
-    function loadTess() {
-        return new Promise(function (res, rej) {
-            if (window.Tesseract) return res();
-            var s = document.createElement('script');
-            s.src = 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js';
-            s.onload = res; s.onerror = function () { rej(new Error('ocr-lib')); };
-            document.head.appendChild(s);
-        });
+    /* ================= QR (most accurate) ================= */
+    function scanQR(img) {
+        return loadScript('https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js', function () { return window.jsQR; }).then(function () {
+            var sizes = [2400, 1600, 3200, 1000];
+            for (var i = 0; i < sizes.length; i++) {
+                var c = toCanvas(img, sizes[i], false), d = c.getContext('2d').getImageData(0, 0, c.width, c.height);
+                var q = window.jsQR(d.data, c.width, c.height, { inversionAttempts: 'attemptBoth' });
+                if (q && q.data) return q.data;
+            }
+            return null;
+        }).catch(function () { return null; });
     }
-    function ocr(p, canvas) {
-        loadTess().then(function () {
-            return Tesseract.recognize(canvas, 'eng', { logger: function (m) {
-                if (m && m.status === 'recognizing text') status(p, '⏳ Reading your Aadhar card… ' + Math.round((m.progress || 0) * 100) + '%', 'info');
-            } });
-        }).then(function (r) {
-            fill(p, parse((r && r.data && r.data.text) || ''));
-        }).catch(function () {
-            status(p, '⚠️ Aadhar card saved, but automatic reading is not available right now (internet needed). Please fill the details manually.', 'warn');
-        });
+    function gunzip(bytes) {
+        if (window.DecompressionStream) {
+            var st = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+            return new Response(st).arrayBuffer().then(function (b) { return new Uint8Array(b); });
+        }
+        return loadScript('https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js', function () { return window.pako; }).then(function () { return window.pako.ungzip(bytes); });
+    }
+    function relSplit(v) {
+        var m = String(v || '').match(/^\s*(S|D|W|C)\s*[\/|]\s*O\s*[:.\-]?\s*(.*)$/i);
+        return m ? { rel: m[1].toUpperCase() + '/O', name: m[2].trim() } : { rel: '', name: String(v || '').trim() };
+    }
+    function genderWord(g) { g = String(g || '').trim().toLowerCase(); if (g === 'm' || g === 'male') return 'Male'; if (g === 'f' || g === 'female') return 'Female'; if (g === 't' || g === 'transgender' || g === 'o' || g === 'other') return 'Other'; return ''; }
+    function dobFromQr(v) {
+        var m = String(v || '').match(/^(\d{2})[-\/](\d{2})[-\/](\d{4})$/); if (m) return m[3] + '-' + m[2] + '-' + m[1];
+        m = String(v || '').match(/^(\d{4})-(\d{2})-(\d{2})$/); if (m) return v;
+        return '';
+    }
+    // Secure QR (all new cards / e-Aadhaar): a huge decimal number -> bytes -> gzip -> fields split by 0xFF
+    function secureQr(digits) {
+        var hex = BigInt(digits).toString(16); if (hex.length % 2) hex = '0' + hex;
+        var bytes = new Uint8Array(hex.length / 2); for (var i = 0; i < bytes.length; i++) bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+        return gunzip(bytes).then(function (raw) {
+            var parts = [], cur = [], dec = new TextDecoder('utf-8');
+            for (var k = 0; k < raw.length && parts.length < 20; k++) { if (raw[k] === 255) { parts.push(dec.decode(new Uint8Array(cur))); cur = []; } else cur.push(raw[k]); }
+            var di = -1; for (var j = 0; j < parts.length; j++) { if (/^\d{2}-\d{2}-\d{4}$/.test(parts[j]) || /^\d{4}-\d{2}-\d{2}$/.test(parts[j])) { di = j; break; } }
+            if (di < 1) return null;
+            var co = relSplit(parts[di + 2] || ''), ref = parts[di - 2] || '';
+            return { vals: { name: parts[di - 1].trim(), dob: dobFromQr(parts[di]), gender: genderWord(parts[di + 1]), fname: co.name }, rel: co.rel, last4: /^\d{4}/.test(ref) ? ref.slice(0, 4) : '' };
+        }).catch(function () { return null; });
+    }
+    // Old XML QR (uid="..." name="..." co="S/O: ...")
+    function xmlQr(t) {
+        function at(n) { var m = t.match(new RegExp('\\b' + n + '="([^"]*)"', 'i')); return m ? m[1] : ''; }
+        var co = relSplit(at('co')), dob = at('dob'), uid = aadDigits(at('uid'));
+        return { vals: { name: at('name'), dob: dobFromQr(dob), gender: genderWord(at('gender')), fname: co.name, num: /^[2-9]\d{11}$/.test(uid) ? uid : '' }, rel: co.rel, last4: uid.slice(-4) };
+    }
+    function qrToFields(txt) {
+        if (!txt) return Promise.resolve(null);
+        txt = String(txt).trim();
+        if (/^<\?xml|^<PrintLetterBarcodeData/i.test(txt)) return Promise.resolve(xmlQr(txt));
+        if (/^\d{100,}$/.test(txt)) return secureQr(txt);
+        return Promise.resolve(null);
     }
 
-    /* ---------- parsing ---------- */
+    /* ================= OCR (fallback / Aadhar number) ================= */
+    function runOcr(p, canvas, label) {
+        return loadScript('https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js', function () { return window.Tesseract; }).then(function () {
+            return Tesseract.recognize(canvas, 'eng', { logger: function (m) {
+                if (m && m.status === 'recognizing text') status(p, '⏳ Reading ' + label + ' side… ' + Math.round((m.progress || 0) * 100) + '%', 'info');
+            } });
+        }).then(function (r) { return (r && r.data && r.data.text) || ''; });
+    }
     function verhoeff(num) {
         var d = [[0,1,2,3,4,5,6,7,8,9],[1,2,3,4,0,6,7,8,9,5],[2,3,4,0,1,7,8,9,5,6],[3,4,0,1,2,8,9,5,6,7],[4,0,1,2,3,9,5,6,7,8],[5,9,8,7,6,0,4,3,2,1],[6,5,9,8,7,1,0,4,3,2],[7,6,5,9,8,2,1,0,4,3],[8,7,6,5,9,3,2,1,0,4],[9,8,7,6,5,4,3,2,1,0]];
         var pm = [[0,1,2,3,4,5,6,7,8,9],[1,5,7,6,2,8,3,0,9,4],[5,8,0,3,7,9,6,1,4,2],[8,9,1,6,0,4,3,5,2,7],[9,4,5,3,1,2,6,8,7,0],[4,2,8,6,5,7,3,9,0,1],[2,7,9,3,8,0,6,4,1,5],[7,0,4,6,9,1,3,2,5,8]];
@@ -21852,76 +21963,105 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
         return c === 0;
     }
     function titleCase(t) { return t.toLowerCase().replace(/\b[a-z]/g, function (m) { return m.toUpperCase(); }); }
-    var STOP = /government|india|aadhaar|aadhar|authority|unique|identification|uidai|male|female|transgender|dob|birth|year|address|vid|download|issued|help|www|enrol|mera|bharat|virtual|signature|digitally|details|photo|date/i;
-    function cleanName(line) { return line.replace(/[^A-Za-z .'\-]/g, ' ').replace(/\s+/g, ' ').trim(); }
+    function tidyName(t) {
+        var w = t.replace(/[^A-Za-z .'\-]/g, ' ').replace(/\s+/g, ' ').trim().split(' ').filter(function (x) { return !/^[a-z]$/.test(x) && x !== '-' && x !== '.'; });
+        return titleCase(w.join(' ').replace(/^[ .\-']+|[ .\-']+$/g, ''));
+    }
+    var STOP = /government|india|aadhaar|aadhar|authority|unique|identification|uidai|male|female|transgender|dob|birth|year|address|vid|download|issued|help|www|enrol|mera|bharat|virtual|signature|digitally|details|photo|date|house|road|street|village|district|post|state|pin|code|dist|tehsil|taluk|colony|nagar|mohalla/i;
     function goodNameLine(line) {
-        if (STOP.test(line)) return false;
+        if (STOP.test(line) || /(?:^|[\s,])(?:S|D|W|C)\s?[\/|]\s?[O0]\b/.test(line)) return false;
         var letters = (line.match(/[A-Za-z]/g) || []).length;
         if (letters < 4 || letters / line.replace(/\s/g, '').length < 0.75) return false;
-        var c = cleanName(line);
-        return c.length >= 4 && /^[A-Za-z]/.test(c);
+        var c = tidyName(line); return c.length >= 4 && c.split(' ').length <= 6;
     }
-    function parse(text) {
-        var out = { name: '', fname: '', dob: '', gender: '', num: '' };
-        var lines = String(text).split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
-
-        // Aadhar number: 12 digits (not part of a 16-digit VID), prefer one that passes the Verhoeff checksum
-        var re = /\d{4}\s?\d{4}\s?\d{4}/g, m, cands = [];
+    function pickNum(text, last4) {
+        var re = /\d{4}[ \t]?\d{4}[ \t]?\d{4}/g, m, c = [];
         while ((m = re.exec(text))) {
             var b = text.charAt(m.index - 1), a = text.substr(m.index + m[0].length, 2);
-            if (/\d/.test(b)) continue; if (/^\s?\d/.test(a)) continue;
-            var dg = m[0].replace(/\s/g, ''); if (/^[2-9]/.test(dg)) cands.push(dg);
+            if (/\d/.test(b) || /^[ \t]?\d/.test(a)) { re.lastIndex = m.index + 1; continue; }   // part of a longer number (e.g. 16-digit VID / PIN)
+            var dg = m[0].replace(/\s/g, ''); if (/^[2-9]/.test(dg)) c.push(dg);
         }
-        out.num = cands.filter(verhoeff)[0] || cands[0] || '';
-
-        // Date of birth
+        var byLast = last4 ? c.filter(function (x) { return x.slice(-4) === last4; }) : [];
+        return byLast.filter(verhoeff)[0] || byLast[0] || c.filter(verhoeff)[0] || c[0] || '';
+    }
+    // "S/O Mohan Lal," | "D/O ..." | "W/O ..." | "C/O ..."  (address block of the BACK side)
+    function findRel(text) {
+        var m = text.match(/(?:^|[\s,:])(S|D|W|C)\s?[\/|Il]\s?[O0]\s*[:.\-]?\s*([A-Za-z][A-Za-z .'\-]{2,45}?)(?=\s*(?:,|\n|\r|$|\d|\bH\.?\s?No\b))/m);
+        return m ? { rel: m[1].toUpperCase() + '/O', name: tidyName(m[2]) } : null;
+    }
+    var SO_LINE = /(?:^|[\s,])(?:S|D|W|C)\s?[\/|Il]\s?[O0]\b/;
+    function parseFront(text, last4) {
+        var out = { num: pickNum(text, last4) }, lines = String(text).split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
         var d = text.match(/(?:DOB|D\.?\s?O\.?\s?B|Date\s*of\s*Birth|Birth)\D{0,14}(\d{1,2})\s*[\/\-.]\s*(\d{1,2})\s*[\/\-.]\s*(\d{4})/i) || text.match(/(\d{2})\s*[\/\-.]\s*(\d{2})\s*[\/\-.]\s*((?:19|20)\d{2})/);
-        if (d) {
-            var dd = +d[1], mm = +d[2], yy = +d[3];
-            if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12 && yy >= 1900 && yy <= new Date().getFullYear())
-                out.dob = yy + '-' + ('0' + mm).slice(-2) + '-' + ('0' + dd).slice(-2);
-        }
-
-        // Gender
-        var g = text.match(/\b(female|male|transgender)\b/i);
-        if (g) { var gv = g[1].toLowerCase(); out.gender = gv === 'female' ? 'Female' : gv === 'male' ? 'Male' : 'Other'; }
-
-        // Name = nearest good English line above the DOB line
-        var di = -1;
-        for (var i = 0; i < lines.length; i++) { if (/DOB|D\.O\.B|Date of Birth|Year of Birth|\d{2}\s*[\/\-.]\s*\d{2}\s*[\/\-.]\s*\d{4}/i.test(lines[i])) { di = i; break; } }
-        if (di > 0) { for (var j = di - 1; j >= 0; j--) { if (goodNameLine(lines[j])) { out.name = cleanName(lines[j]); break; } } }
-        if (!out.name) { for (var k = 0; k < lines.length; k++) { if (goodNameLine(lines[k])) { out.name = cleanName(lines[k]); break; } } }
-        if (out.name) out.name = titleCase(out.name);
-
-        // Father / guardian (S/O, D/O, W/O, C/O printed in the address)
-        var f = text.match(/(?:^|[\s,])(?:S|D|W|C)\s?[\/|Il]\s?[O0][:.\s,\-]+([A-Za-z][A-Za-z .'\-]{2,40}?)(?=\s*,|\n|\d|$)/m);
-        if (f) out.fname = titleCase(cleanName(f[1]));
+        if (d) { var dd = +d[1], mm = +d[2], yy = +d[3]; if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12 && yy >= 1900 && yy <= new Date().getFullYear()) out.dob = yy + '-' + ('0' + mm).slice(-2) + '-' + ('0' + dd).slice(-2); }
+        var g = text.match(/\b(female|male|transgender)\b/i); if (g) out.gender = genderWord(g[1]);
+        function idx(re) { for (var i = 0; i < lines.length; i++) if (re.test(lines[i])) return i; return -1; }
+        var iDob = idx(/DOB|D\.O\.B|Date of Birth|Year of Birth|\bYOB\b|\d{2}\s*[\/\-.]\s*\d{2}\s*[\/\-.]\s*\d{4}/i), iSo = idx(SO_LINE), iG = idx(/\b(male|female|transgender)\b/i);
+        var anchor = (iSo >= 0 && (iDob < 0 || iSo < iDob)) ? iSo : (iDob >= 0 ? iDob : iG);
+        // Applicant name = nearest English line ABOVE the DOB line (or above the S/O line on letter-style cards)
+        if (anchor > 0) { for (var j = anchor - 1; j >= Math.max(0, anchor - 4); j--) { if (/government of india|भारत सरकार/i.test(lines[j])) break; if (goodNameLine(lines[j])) { out.name = tidyName(lines[j]); break; } } }
+        if (!out.name) { var h = idx(/government of india/i); if (h >= 0) for (var k = h + 1; k < Math.min(lines.length, h + 6); k++) { if (goodNameLine(lines[k])) { out.name = tidyName(lines[k]); break; } } }
+        // Father only if the front itself carries an S/O line or a "Father" label (letter-style cards)
+        var rel = findRel(text), lab = text.match(/Father['’]?s?\s*Name\s*[:\-]?\s*([A-Za-z][A-Za-z .'\-]{2,40})/i);
+        if (lab) out.fname = tidyName(lab[1]); else if (rel) { out.fname = rel.name; out.rel = rel.rel; }
+        return out;
+    }
+    function parseBack(text, last4) {
+        var out = { num: pickNum(text, last4) }, rel = findRel(text);
+        if (rel) { out.fname = rel.name; out.rel = rel.rel; }
         return out;
     }
 
-    /* ---------- autofill the form ---------- */
+    /* ================= process one uploaded side ================= */
+    function processSide(p, side, img) {
+        var label = side === 'front' ? 'front' : 'back';
+        status(p, '⏳ Reading ' + label + ' side… (QR code first, then text)', 'info');
+        var res = { vals: {}, src: {}, rel: '', last4: '', ocr: true };
+        scanQR(img).then(qrToFields).then(function (q) {
+            if (q) { res.last4 = q.last4 || ''; res.rel = q.rel || ''; res.qr = true; ['name', 'dob', 'gender', 'fname', 'num'].forEach(function (k) { if (q.vals[k]) { res.vals[k] = q.vals[k]; res.src[k] = 'qr'; } }); }
+            return runOcr(p, toCanvas(img, 1700, true), label).then(function (text) {
+                var o = side === 'front' ? parseFront(text, res.last4) : parseBack(text, res.last4);
+                ['name', 'dob', 'gender', 'fname', 'num'].forEach(function (k) { if (o[k] && !res.vals[k]) { res.vals[k] = o[k]; res.src[k] = 'ocr'; } });
+                if (!res.rel && o.rel) res.rel = o.rel;
+            }).catch(function () { res.ocr = false; });
+        }).then(function () { fill(p, side, res); });
+    }
+
+    /* ================= autofill the form ================= */
     function put(id, val, errId) {
         var el = $(id); if (!el || !val) return false;
-        el.value = val;
-        if (id === IDS.admin.num || id === IDS.pr.num) aadFmt(el);
+        el.value = val; if (id === IDS.admin.num || id === IDS.pr.num) aadFmt(el);
         if (errId) { var e = $(errId); if (e) e.style.display = 'none'; }
         el.classList.remove('aad-filled'); void el.offsetWidth; el.classList.add('aad-filled');
         return true;
     }
-    function fill(p, r) {
-        var I = IDS[p], got = [], miss = [];
-        (put(I.name, r.name, I.en) ? got : miss).push('Applicant Name');
-        (put(I.fname, r.fname, I.ef) ? got : miss).push("Father / Guardian Name");
-        (put(I.dob, r.dob, I.ed) ? got : miss).push('Date of Birth');
-        (put(I.gender, r.gender, I.eg) ? got : miss).push('Gender');
-        (put(I.num, r.num, I.ea) ? got : miss).push('Aadhar Number');
+    function fill(p, side, res) {
+        var I = IDS[p], v = res.vals, errs = { name: I.en, fname: I.ef, dob: I.ed, gender: I.eg, num: I.ea }, got = [], warn = [];
+        // never let the same text land in both name and father fields
+        if (v.name && v.fname && v.name.toLowerCase() === v.fname.toLowerCase()) { delete v.fname; warn.push('Father name looked identical to the applicant name, so it was <b>not</b> filled — please enter it manually.'); }
+        // Name only from the front (or QR). Father only from the back (or QR / S/O line). Number from either.
+        var allowed = ['name', 'dob', 'gender', 'fname', 'num'];
+        allowed.forEach(function (k) {
+            if (!v[k]) return;
+            if (k === 'name' && side === 'back' && res.src[k] !== 'qr') return;
+            if (k === 'num' && side === 'back' && aadValid($(I.num) && $(I.num).value)) return;     // keep the front's number
+            if (put(I[k], v[k], errs[k])) got.push('<b>' + LABEL[k] + '</b> ' + (res.src[k] === 'qr' ? '✔ (from QR)' : '(from text – please verify)'));
+        });
         if (!got.length) {
-            status(p, '⚠️ Aadhar card saved, but the text was not readable. Please upload a clearer, straight photo (all four corners visible) with <b>Re-upload</b>, or fill the details manually.', 'warn');
+            status(p, '⚠️ This side was saved but nothing could be read from it. Please upload a clearer, straight, well-lit photo (all 4 corners visible, no glare) with <b>Re-upload</b>, or fill the details manually.' + (res.ocr ? '' : '<br>(Internet is needed to read the card.)'), 'warn');
             return;
         }
-        status(p, '✅ <b>Autofilled:</b> ' + got.join(', ') + '.' + (miss.length ? '<br>⚠️ <b>Not found (fill manually):</b> ' + miss.join(', ') + '.' : '') +
-            '<br>Please check every detail — you can edit anything that is wrong. Mobile number &amp; Email must be entered manually.', miss.length ? 'warn' : 'ok');
+        if (res.rel === 'W/O') warn.push('The card says <b>W/O</b> (wife of) — that is the <b>husband\'s</b> name. Change it if the guardian is different.');
+        else if (res.rel === 'C/O') warn.push('The card says <b>C/O</b> (care of) — this person may not be the father. Please verify.');
+        var haveF = AAD[p].front, haveB = AAD[p].back;
+        if (side === 'front' && !haveB && !($(I.fname) && $(I.fname).value)) warn.push('Upload the <b>Back side</b> too to autofill Father / Guardian name.');
+        if (side === 'back' && !haveF && !($(I.name) && $(I.name).value)) warn.push('Upload the <b>Front side</b> too to autofill Applicant Name, Date of Birth and Gender.');
+        if (!res.ocr) warn.push('Text reading is unavailable right now (internet needed) — only QR data was used.');
+        warn.push('Mobile number &amp; Email must be entered manually. Everything autofilled can be edited.');
+        status(p, '✅ <b>' + (side === 'front' ? 'Front' : 'Back') + ' side read.</b> Filled: ' + got.join(' • ') + '<br>⚠️ ' + warn.join('<br>⚠️ '), got.length >= 2 && !warn.slice(0, -1).length ? 'ok' : 'warn');
     }
+
+    window.__aadTest = { parseFront: parseFront, parseBack: parseBack, qrToFields: qrToFields };
 })();
 </script>
 </body>
